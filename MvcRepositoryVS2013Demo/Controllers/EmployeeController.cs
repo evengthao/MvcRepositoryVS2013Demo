@@ -8,17 +8,24 @@ using System.Web;
 using System.Web.Mvc;
 using MvcRepositoryVS2013Demo.Dal;
 using MvcRepositoryVS2013Demo.Models;
+using MvcRepositoryVS2013Demo.Repository;
 
 namespace MvcRepositoryVS2013Demo.Controllers
 {
     public class EmployeeController : Controller
     {
-        private MvcRepositoryVs2013DemoContext db = new MvcRepositoryVs2013DemoContext();
+       // private MvcRepositoryVs2013DemoContext db = new MvcRepositoryVs2013DemoContext();
 
+        private IEmployeeRepository _employeeRepository;
+
+        public EmployeeController(IEmployeeRepository employeeRepository)
+        {
+            _employeeRepository = employeeRepository;
+        }
         // GET: /Employee/
         public ActionResult Index()
         {
-            return View(db.Employees.ToList());
+            return View(_employeeRepository.GetEmployees());
         }
 
         // GET: /Employee/Details/5
@@ -28,7 +35,7 @@ namespace MvcRepositoryVS2013Demo.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Employee employee = db.Employees.Find(id);
+            Employee employee = _employeeRepository.GetModelById(id);
             if (employee == null)
             {
                 return HttpNotFound();
@@ -51,8 +58,8 @@ namespace MvcRepositoryVS2013Demo.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Employees.Add(employee);
-                db.SaveChanges();
+                _employeeRepository.Insert(employee);
+                _employeeRepository.Save();
                 return RedirectToAction("Index");
             }
 
@@ -66,7 +73,7 @@ namespace MvcRepositoryVS2013Demo.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Employee employee = db.Employees.Find(id);
+            Employee employee = _employeeRepository.GetModelById(id);
             if (employee == null)
             {
                 return HttpNotFound();
@@ -83,8 +90,8 @@ namespace MvcRepositoryVS2013Demo.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(employee).State = EntityState.Modified;
-                db.SaveChanges();
+                _employeeRepository.Update(employee);
+                _employeeRepository.Save();
                 return RedirectToAction("Index");
             }
             return View(employee);
@@ -97,7 +104,7 @@ namespace MvcRepositoryVS2013Demo.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Employee employee = db.Employees.Find(id);
+            Employee employee = _employeeRepository.GetModelById(id);
             if (employee == null)
             {
                 return HttpNotFound();
@@ -110,19 +117,10 @@ namespace MvcRepositoryVS2013Demo.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Employee employee = db.Employees.Find(id);
-            db.Employees.Remove(employee);
-            db.SaveChanges();
+            _employeeRepository.Delete(id);
+            _employeeRepository.Save();
+   
             return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }

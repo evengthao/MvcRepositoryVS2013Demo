@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
-using System.Web;
 using MvcRepositoryVS2013Demo.Dal;
+using MvcRepositoryVS2013Demo.Models;
 
 namespace MvcRepositoryVS2013Demo.Repository
 {
@@ -17,32 +18,33 @@ namespace MvcRepositoryVS2013Demo.Repository
 
         public IEnumerable<Models.Employee> GetEmployees()
         {
-            throw new NotImplementedException();
+            return _mvcDemoContext.Employees.ToList();
         }
 
-        public Models.Employee GetModelById(int id)
+        public Models.Employee GetModelById(int? id)
         {
-            throw new NotImplementedException();
+            return _mvcDemoContext.Employees.Find(id);
         }
 
         public void Insert(Models.Employee employee)
         {
-            throw new NotImplementedException();
+            _mvcDemoContext.Employees.Add(employee);
         }
 
-        public void Delete(Models.Employee employee)
+        public void Delete(int id)
         {
-            throw new NotImplementedException();
+            Employee employee = _mvcDemoContext.Employees.Find(id);
+            _mvcDemoContext.Employees.Remove(employee);
         }
 
-        public void Update(int id)
+        public void Update(Employee employee)
         {
-            throw new NotImplementedException();
+            _mvcDemoContext.Entry(employee).State = EntityState.Modified;
         }
 
         public void Save()
         {
-            throw new NotImplementedException();
+            _mvcDemoContext.SaveChanges();
         }
     }
 }

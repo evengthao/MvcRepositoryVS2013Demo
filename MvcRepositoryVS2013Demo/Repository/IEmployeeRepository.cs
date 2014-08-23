@@ -6,10 +6,10 @@ namespace MvcRepositoryVS2013Demo.Repository
     public interface IEmployeeRepository
     {
         IEnumerable<Employee> GetEmployees();
-        Employee GetModelById(int id);
+        Employee GetModelById(int? id);
         void Insert(Employee employee);
-        void Delete(Employee employee);
-        void Update(int id);
+        void Delete(int id);
+        void Update(Employee employee);
         void Save();
 
     }
