@@ -7,5 +7,4 @@ before_build:
  - nuget restore
 build:
  verbosity: minimal
-- cmd: >-
-    msbuild MvcRepositoryVS2013Demo\MvcRepositoryVS2013Demo\MvcRepositoryVS2013Demo.csproj /t:Package /p:Configuration=Prod;PackageLocation="..\..\MvcRepositoryVS2013Demo.zip"
+- msbuild MvcRepositoryVS2013Demo\MvcRepositoryVS2013Demo\MvcRepositoryVS2013Demo.csproj /t:Package /p:Configuration=Prod;PackageLocation="..\..\MvcRepositoryVS2013Demo.zip"
